@@ -1,0 +1,75 @@
+
+ZF3R0-FHED2-M80TY-8QYGC-NPKYF
+step 1
+yum -y install oracle-database-server-12cR2-preinstall
+yum -y install oracle-rdbms-server-12cR2-preinstall
+step 2
+yum install oracleasm*
+yum install kmod-oracleasm*
+yum -y update
+yum clean
+groupadd -g 54327 asmdba
+groupadd -g 54328 asmoper
+groupadd -g 54329 asmadmin
+usermod -a -G asmdba oracle
+id oracle
+ useradd -u 54331 -g oinstall -G dba,asmdba,asmadmin,racdba grid
+id grid   
+
+passwd oracle
+passwd grid
+oracleasm configure -i
+oracleasm init
+create 30GB disk
+partionning  in 3
+fdisk -l
+fdisk /dev/sdb
+n
+P
+1    
+blanc
++10G
+n
+P
+2
+blanc
++10G
+
+n
+P
+3
+blanc
++10G
+w
+
+oracleasm createdisk CRS1 /dev/sdc1
+oracleasm createdisk DATA1 /dev/sdc2
+oracleasm createdisk FRA1 /dev/sdc3
+oracleasm listdisks
+cd /dev/oracleasm
+cd disks
+
+creation of oracle directories for database installation
+mkdir -p /u01/app/oracle
+mkdir -p /u01/app/oracle/product/12.2.0/db_home
+chown -R oracle:oinstall /u01/app/oracle
+
+creation of oracle directories of oracle grid
+mkdir -p /u01/app/grid
+mkdir -p /u01/app/grid/12.2.0/grid_home
+chown -R grid:oinstall /u01/app/grid
+chmod -R 775 /u01
+set grid bash profile
+ORACLE_SID=+ASM; export ORACLE_SID
+ORACLE_BASE=/u01/app/grid export ORACLE_BASE
+ORACLE_HOME=/u01/app/grid/product/12.2.0/grid_home export ORACLE_HOME
+ORACLE_TERM=xterm export ORACLE_TERM
+TNS_ADMIN=$ORACLE_HOME/network/admin  export TNS_ADMIN
+PATH=.:${JAVA_HOME}/bin:${PATH}:$HOME/bin:$ORACLE_HOME/bin
+PATH=${PATH}:/usr/bin:/bin:/usr/local/bin
+export PATH
+umask 
+cp .bash_profile    .bash_profile_orig
+vi .bash_profile 
+. .bash_profile 
+env |grep ORA 
