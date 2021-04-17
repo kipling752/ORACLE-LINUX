@@ -1,5 +1,4 @@
 
-ZF3R0-FHED2-M80TY-8QYGC-NPKYF
 step 1
 yum -y install oracle-database-server-12cR2-preinstall
 yum -y install oracle-rdbms-server-12cR2-preinstall
